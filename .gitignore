@@ -9,6 +9,4 @@ __pycache__/
 db.json
 db.sqlite3
 
-# /heart
-/manga
 /MangaUsers
