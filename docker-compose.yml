@@ -1,36 +1,36 @@
 version: "3"
 
 services:
-  manga_db:
-    image: postgres:latest
+  db:
+    image: postgres:12.1
     container_name: manga_db
-    hostname: manga_db
+    hostname: ${DB_HOST}
     environment:
-      POSTGRES_DB: manga_db
-      POSTGRES_USER: tuser
-      POSTGRES_PASSWORD: ubuntu
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "5433:5432"
+      - ${DB_PORT}:${DB_PORT}
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  back:
-    container_name: manga_cont
+  service:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: manga_service
     restart: always
-    command: sh -c "python manage.py makemigrations && python manage.py migrate && 
-      python manage.py collectstatic --noinput && gunicorn -b 0.0.0.0:8123 MangaRead.wsgi --reload"
     env_file:
       - .env
-    volumes:
-      - .:/MangaRead
-      - ./static:/static
     ports:
       - "8123:8123"
+    volumes:
+      - .:/MangoRead
+      - ./static:/static
     depends_on:
-      - manga_db
+      - db
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic
+      --no-input && gunicorn -b 0.0.0.0:8123 heart.wsgi --reload"
 
 volumes:
   postgres_data:
