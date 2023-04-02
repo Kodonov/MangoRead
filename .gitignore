@@ -3,6 +3,7 @@
 .env
 /venv
 /static
+/staticfiles
 /media
 __pycache__/
 db.json
